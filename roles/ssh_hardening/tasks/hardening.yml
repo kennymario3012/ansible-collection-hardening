@@ -32,6 +32,9 @@
   set_fact:
     sshd_version: "{{ sshd_version_raw.stderr | regex_replace('.*_([0-9]*.[0-9]).*', '\\1') }}"
 
+- name: Add ssh key
+  include_tasks: add_ssh_keys.yml
+
 - name: Set default for ssh_host_key_files if not supplied
   include_tasks: crypto_hostkeys.yml
   when:
@@ -132,3 +135,15 @@
   when:
     - sshd_disable_crypto_policy | bool
     - ('crypto-policies' in ansible_facts.packages)
+
+# - name: Setup alternate SSH port
+#   become: true
+#   become_method: sudo
+#   set_fact:
+#     ansible_port: "{{ ssh_port }}"
+
+- name: Enable UFW
+  become: true
+  become_method: sudo
+  community.general.ufw:
+    state: enabled

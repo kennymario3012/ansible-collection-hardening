@@ -1,0 +1,75 @@
+- name: Cria usuarios com acesso root
+  become: true
+  become_method: sudo
+  user:
+    name: "{{ item }}"
+    state: present
+    groups: sudo
+    append: yes
+    shell: /bin/bash
+    password_lock: true
+
+- name: Adiciona chave SSH , removing all the authorized key already set
+  become: true
+  become_method: sudo
+  user:
+    name: "{{ item }}"
+    groups: "sudo"
+    state: present
+  
+- name: "Add authorized keys"
+  become: true
+  become_method: sudo
+  authorized_key:
+    user: "{{ item }}"
+    key: "{{ lookup('file', 'keys/id_rsa_'+ item + '.pub') }}"
+
+# - name: Adiciona chave SSH for imadmin user to db.pub
+#   become_method: sudo
+#   become: true
+#   authorized_key:
+#     user: "imadmin"
+#     state: present
+#     key: '{{ item }}'
+#     exclusive: True
+#   with_file:
+#     - keys/id_rsa_sgc_bd.pub
+    
+- name: Disable SSH password authentication
+  become: true
+  become_method: sudo
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PasswordAuthentication yes'
+    line: 'PasswordAuthentication no'
+
+
+- name: Make users passwordless for sudo in group wheel
+  become: true
+  become_method: sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+# - name: Remove the user 'imadmin'
+#   become: true
+#   become_method: sudo
+#   ansible.builtin.user:
+#     name: imadmin
+#     state: absent
+#     remove: yes
+#   with_items: 
+#    - imadmin
+- name: Disable password authentication for root
+  become: true
+  become_method: sudo
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify:
+    - Restart sshd

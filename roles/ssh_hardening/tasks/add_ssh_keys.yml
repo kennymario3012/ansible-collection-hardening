@@ -1,0 +1,22 @@
+- name: Add SSH To users
+  include_tasks: add_ssh.yml
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: item
+       
+- name: "UFW - Allow HTTP on port {{ ssh_port }}"
+  become: true
+  become_method: sudo
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+
+- name: "UFW - Deny HTTP on port 22"
+  become: true
+  become_method: sudo
+  ufw:
+    rule: deny
+    port: "22"
+    proto: tcp
+  notify: "Restart sshd"

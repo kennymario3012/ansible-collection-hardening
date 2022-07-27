@@ -8,6 +8,8 @@
   community.mysql.mysql_user:
     name: 'root'
     host_all: true
+    login_password: "{{ mariadb_root_pwd }}"
+    login_user: "{{ username }}"
     password: '{{ mysql_root_password | mandatory }}'
     state: present
     login_unix_socket: "{{ login_unix_socket | default(omit) }}"

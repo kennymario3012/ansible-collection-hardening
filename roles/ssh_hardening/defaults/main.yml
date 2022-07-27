@@ -22,10 +22,10 @@ ssh_server_hardening: true          # sshd
 
 # If true, password login is allowed
 ssh_client_password_login: false    # ssh
-ssh_server_password_login: false    # sshd
+ssh_server_password_login: true    # sshd
 
 # ports on which ssh-server should listen
-ssh_server_ports: ['22']            # sshd
+ssh_server_ports: ['2245']            # sshd
 
 # port to which ssh-client should connect
 ssh_client_port: '22'               # ssh
@@ -73,7 +73,7 @@ ssh_permit_tunnel: false
 ssh_remote_hosts: []
 
 # Set this to "without-password" or "yes" to allow root to login
-ssh_permit_root_login: 'no'         # sshd
+ssh_permit_root_login: 'yes'         # sshd
 
 # false to disable TCP Forwarding. Set to 'yes', 'no', 'local', 'all' or 'remote' to allow TCP Forwarding.
 ssh_allow_tcp_forwarding: 'no'      # sshd

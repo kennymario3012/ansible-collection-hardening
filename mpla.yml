@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tags:
+    - ubuntu
+    - mysql_hardening
+    - nginx_hardening
+    - os_hardening
+    - ssh_hardening
+  roles:
+    - mysql_hardening
+    - nginx_hardening
+    - os_hardening
+    - ssh_hardening
+    

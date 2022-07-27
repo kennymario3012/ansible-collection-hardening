@@ -40,12 +40,16 @@
 
 - name: Check which MySQL/MariaDB version is used
   community.mysql.mysql_info:
+    login_password: "{{ mariadb_root_pwd }}"
+    login_user: "{{ username }}"
     filter: version
     login_unix_socket: "{{ login_unix_socket | default(omit) }}"
   register: mysql_version
 
 - name: Check MySQL/MariaDB settings
   community.mysql.mysql_info:
+    login_password: "{{ mariadb_root_pwd }}"
+    login_user: "{{ username }}"
     filter: settings
     login_unix_socket: "{{ login_unix_socket | default(omit) }}"
   register: mysql_settings
