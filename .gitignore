@@ -1,3 +1,5 @@
 .kitchen
 hosts
 Gemfile.lock
+/group_vars
+group_vars/
